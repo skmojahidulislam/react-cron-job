@@ -9,6 +9,12 @@ on:
         - cron: '30 11 * * *'
     workflow_dispatch:
 
+concurrency:
+  group: docker-build
+  cancel-in-progress: false
+
+
+
 jobs:
     build:
         runs-on: ubuntu-latest

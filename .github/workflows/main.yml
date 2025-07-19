@@ -31,6 +31,22 @@ jobs:
                 restore-keys: |
                   npm-${{ runner.os }}-
 
+            - name: 📥 Install npm packages
+              run: npm install
+
+            - name: ⚙️ Build React App
+              run: npm run build
+
+            - name: 👀 Check build folder
+              run: ls -al build/
+
+            - name: 📦 Upload Build Artifact
+              if: success()
+              uses: actions/upload-artifact@v4
+              with:
+                name: react-build-output
+                path: build/
+
             - name: 🔐 DockerHub Login
               run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
@@ -40,9 +56,4 @@ jobs:
             - name: 📤 Push Docker Image
               run: docker push ${{ secrets.DOCKER_USERNAME }}/react-schedule:vs1
 
-            - name: 📦 Upload Build Artifact
-              if: success()
-              uses: actions/upload-artifact@v4
-              with:
-                name: react-build-output
-                path: build/
+            
